@@ -1,0 +1,18 @@
+kind: reverse
+name: model
+source:
+  database: mysql
+  conn_str: 'root:Zz1122@tcp(localhost:3306)/todo_app_db?charset=utf8mb4'
+targets:
+- type: codes
+  language: golang
+  output_dir: ./model
+  template: resources/templates/goxorm/entity.go.tpl
+- type: codes
+  language: golang
+  output_dir: ./repository
+  template: resources/templates/goxorm/entity-dao.go.tpl
+table_mapper: snake
+column_mapper: snake
+table_prefix: ""
+multiple_files: true
