@@ -49,7 +49,7 @@ func (r *todoRepository) GetByID(id uint64) (*model.TodoItem, error) {
 
 // Update 更新待办事项
 func (r *todoRepository) Update(todo *model.TodoItem) error {
-	_, err := r.engine.ID(todo.Id).Update(todo)
+	_, err := r.engine.ID(todo.Id).Cols("completed", "updated_at", "title", "description", "priority", "due_date").Update(todo)
 	return err
 }
 

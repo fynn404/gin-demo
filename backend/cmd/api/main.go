@@ -58,10 +58,12 @@ func setupHandlers(r *gin.Engine) error {
 
 	// 初始化 repositories
 	userRepo := repository.NewUserRepository(db)
+	todoRepo := repository.NewTodoRepository(db)
 
 	// 创建 handler 配置
 	handlerConfig := &handler.HandlerConfig{
 		UserRepo: userRepo,
+		TodoRepo: todoRepo,
 	}
 
 	// 创建处理器

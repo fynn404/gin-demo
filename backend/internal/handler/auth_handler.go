@@ -2,6 +2,8 @@
 package handler
 
 import (
+	"net/http"
+
 	"github.com/fynn404/gin-demo/backend/internal/service"
 	"github.com/gin-gonic/gin"
 )
@@ -60,4 +62,15 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	}
 
 	Success(c, resp)
+}
+
+// Logout handles user logout
+func (h *AuthHandler) Logout(c *gin.Context) {
+	// Clear the token cookie
+	c.SetCookie("token", "", -1, "/", "", false, true)
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "Successfully logged out",
+	})
 }

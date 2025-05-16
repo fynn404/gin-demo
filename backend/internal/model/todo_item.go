@@ -15,7 +15,7 @@ type TodoItem struct {
 	Completed   bool      `xorm:"'completed' notnull default(false) comment('是否完成') BOOL"`
 	CreatedAt   time.Time `xorm:"'created_at' notnull created comment('创建时间')"`
 	UpdatedAt   time.Time `xorm:"'updated_at' notnull updated comment('更新时间')"`
-
+	EnableFlag  bool      `xorm:"'enable_flag' notnull default(true) comment('启用标志，true为启用，false为禁用') BOOL"`
 	// 关联字段（不映射到数据库）
 	User *User `xorm:"-"`
 }
@@ -30,4 +30,5 @@ func (t *TodoItem) BeforeInsert() {
 	if t.Priority == "" {
 		t.Priority = "medium"
 	}
+	t.EnableFlag = true
 }

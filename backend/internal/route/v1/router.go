@@ -14,6 +14,7 @@ type RouteGroup interface {
 type Routes struct {
 	auth *AuthRoutes
 	user *UserRoutes
+	todo *TodoRoutes
 }
 
 // NewRoutes 创建路由实例
@@ -21,6 +22,7 @@ func NewRoutes(h *controllers.Handler) *Routes {
 	return &Routes{
 		auth: NewAuthRoutes(h),
 		user: NewUserRoutes(h),
+		todo: NewTodoRoutes(h),
 	}
 }
 
@@ -35,5 +37,6 @@ func SetupRoutes(r *gin.Engine, h *controllers.Handler) {
 	// 注册各个模块的路由
 	routes.auth.Register(v1)
 	routes.user.Register(v1)
+	routes.todo.Register(v1)
 
 }
