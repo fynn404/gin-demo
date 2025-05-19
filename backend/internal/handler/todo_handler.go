@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"fmt"
-
 	"github.com/fynn404/gin-demo/backend/internal/service"
 	"github.com/fynn404/gin-demo/backend/pkg"
 	"github.com/gin-gonic/gin"
@@ -174,8 +172,9 @@ func (h *TodoHandler) DeleteTodoItem(c *gin.Context) {
 // ChangeTodoItemStatus 更改待办事项状态
 func (h *TodoHandler) ChangeTodoItemStatus(c *gin.Context) {
 	var req service.ChangeTodoItemStatusReq
+
 	if err := c.ShouldBindJSON(&req); err != nil {
-		fmt.Println(err)
+
 		BadRequest(c, "Invalid request body")
 		return
 	}

@@ -3,7 +3,6 @@ package handler
 
 import (
 	"github.com/fynn404/gin-demo/backend/internal/service"
-	"net/http"
 	"strings"
 	"time"
 
@@ -70,7 +69,7 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 	// 从请求头获取 token
 	authHeader := c.GetHeader("Authorization")
 	if authHeader == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No token provided"})
+		Error(c, 401, "No token provided", nil)
 		return
 	}
 
@@ -81,9 +80,9 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 	// 设置过期时间为 token 的剩余有效期，这里假设为24小时
 	err := config.AddTokenToBlacklist(token, 24*time.Hour)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to logout"})
+		InternalServerError(c, "Failed to logout", err)
 		return
 	}
+	Success(c, nil)
 
-	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
 }

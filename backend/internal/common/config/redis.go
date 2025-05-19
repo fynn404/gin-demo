@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
+	"github.com/fynn404/gin-demo/backend/internal/common/ctx"
 	"log"
 	"time"
 
@@ -56,13 +57,17 @@ func CloseRedis() {
 
 // 将 token 加入黑名单
 func AddTokenToBlacklist(token string, expiration time.Duration) error {
-	ctx := context.Background()
-	return Redis.Set(ctx, "blacklist:"+token, true, expiration).Err()
+	c, cancel := ctx.Background()
+	defer cancel()
+
+	return Redis.Set(c, "blacklist:"+token, true, expiration).Err()
 }
 
 // 检查 token 是否在黑名单中
 func IsTokenBlacklisted(token string) bool {
-	ctx := context.Background()
-	exists, _ := Redis.Exists(ctx, "blacklist:"+token).Result()
+	c, cancel := ctx.Background()
+	defer cancel()
+
+	exists, _ := Redis.Exists(c, "blacklist:"+token).Result()
 	return exists > 0
 }

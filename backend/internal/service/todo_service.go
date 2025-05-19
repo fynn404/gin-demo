@@ -281,7 +281,7 @@ func (t *Todo) ChangeTodoItemStatus(c *gin.Context, req *ChangeTodoItemStatusReq
 		}
 
 		// 更新状态
-		todo.Completed = req.Completed
+		todo.Completed = *req.Completed
 		todo.UpdatedAt = time.Now()
 		fmt.Println(todo)
 		// 保存更新
@@ -376,7 +376,7 @@ type DeleteTodoItemResp struct {
 // ChangeTodoItemStatusReq represents the request structure for changing a todo item status.
 type ChangeTodoItemStatusReq struct {
 	TodoID    string `json:"todoId"`
-	Completed bool   `json:"completed" binding:"required"`
+	Completed *bool  `json:"completed" binding:"required"`
 }
 
 // ChangeTodoItemStatusResp represents the response structure for changing a todo item status.
