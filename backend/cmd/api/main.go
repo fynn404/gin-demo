@@ -128,6 +128,8 @@ func main() {
 
 	// 6. 启动服务器
 	go func() {
+		// Serve static files
+		r.Static("/uploads", "./uploads")
 		log.Printf("Server starting on %s", srv.Addr)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("Failed to start server: %v", err)

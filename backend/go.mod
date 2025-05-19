@@ -7,6 +7,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-jwt/jwt/v5 v5.2.0
+	github.com/google/uuid v1.6.0
 	golang.org/x/crypto v0.17.0
 	gopkg.in/ini.v1 v1.67.0
 	xorm.io/xorm v1.3.4

@@ -19,5 +19,6 @@ func (r *UserRoutes) Register(group *gin.RouterGroup) {
 	{
 		auth.GET("/profile", r.handler.User.GetUserProfile)
 		auth.PUT("/profile", r.handler.User.UpdateUserProfile)
+		auth.POST("/avatar", r.handler.User.UploadAvatar)
 	}
 }

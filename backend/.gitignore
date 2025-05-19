@@ -16,7 +16,7 @@
 Thumbs.db
 
 # 编辑器/IDE 生成的文件
-.idea/
+/.idea/
 .vscode/
 *.swp
 
@@ -30,3 +30,5 @@ Thumbs.db
 .env
 # 日志
 /logs/
+
+/uploads/
