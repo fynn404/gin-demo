@@ -53,3 +53,16 @@ func CloseRedis() {
 		}
 	}
 }
+
+// 将 token 加入黑名单
+func AddTokenToBlacklist(token string, expiration time.Duration) error {
+	ctx := context.Background()
+	return Redis.Set(ctx, "blacklist:"+token, true, expiration).Err()
+}
+
+// 检查 token 是否在黑名单中
+func IsTokenBlacklisted(token string) bool {
+	ctx := context.Background()
+	exists, _ := Redis.Exists(ctx, "blacklist:"+token).Result()
+	return exists > 0
+}

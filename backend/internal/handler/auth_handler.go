@@ -2,9 +2,12 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/fynn404/gin-demo/backend/internal/service"
+	"net/http"
+	"strings"
+	"time"
+
+	"github.com/fynn404/gin-demo/backend/internal/common/config"
 	"github.com/gin-gonic/gin"
 )
 
@@ -63,14 +66,24 @@ func (h *AuthHandler) Register(c *gin.Context) {
 
 	Success(c, resp)
 }
-
-// Logout handles user logout
 func (h *AuthHandler) Logout(c *gin.Context) {
-	// Clear the token cookie
-	c.SetCookie("token", "", -1, "/", "", false, true)
+	// 从请求头获取 token
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "No token provided"})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": 200,
-		"msg":  "Successfully logged out",
-	})
+	// 提取 token（去掉 "Bearer " 前缀）
+	token := strings.TrimPrefix(authHeader, "Bearer ")
+
+	// 将 token 加入 Redis 黑名单
+	// 设置过期时间为 token 的剩余有效期，这里假设为24小时
+	err := config.AddTokenToBlacklist(token, 24*time.Hour)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to logout"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
 }

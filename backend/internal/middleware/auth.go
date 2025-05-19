@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"github.com/fynn404/gin-demo/backend/internal/common/config"
 	"net/http"
 	"strings"
 
@@ -14,6 +15,16 @@ func AuthMiddleware() gin.HandlerFunc {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is required"})
+			c.Abort()
+			return
+		}
+
+		// 提取 token
+		token := strings.TrimPrefix(authHeader, "Bearer ")
+
+		// 检查 token 是否在黑名单中
+		if config.IsTokenBlacklisted(token) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token has been revoked"})
 			c.Abort()
 			return
 		}

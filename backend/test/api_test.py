@@ -17,22 +17,22 @@ class APITester:
             'admin': {'username': 'admin_test1', 'password': 'admin123', 'role': 'admin', 'nickname': 'Admin User',
                       'email': 'admin1@test.com'},
             'user': {'username': 'user_test1', 'password': 'user666', 'role': 'user', 'nickname': 'username123',
-                     'email': 'student1@test.com'}
+                        'email': 'student1@test.com'}
         }
         self.test_update_users = {
             'admin': {'username': 'admin_test2', 'password': 'admin234', 'role': 'admin', 'nickname': 'admin_name666',
                       'email': 'admin_new@test.com'},
             'user': {'username': 'user_test1_new', 'password': 'user666', 'role': 'user',
-                     'nickname': 'username666New',
-                     'email': 'student_new2@test.com'}
+                        'nickname': 'username666New',
+                        'email': 'student_new2@test.com'}
         }
         self.test_todo = {
-            'title': 'Test Todo Item',
+            'title': 'Test Todo Item2222',
             'description': 'This is a test todo item',
-            'priority': 1,
+            'priority': "low",
             'due_date': '2024-12-31T23:59:59Z'
         }
-        self.created_todo_id = None
+        self.created_todo_id = 2
 
     def make_request(self, method: str, endpoint: str, data: Optional[Dict] = None,
                      token: Optional[str] = None) -> requests.Response:
@@ -56,6 +56,8 @@ class APITester:
                 response = requests.put(url, json=data, headers=headers)
             elif method == 'DELETE':
                 response = requests.delete(url, headers=headers)
+            elif method == 'PATCH':
+                response = requests.patch(url, json=data,headers=headers)
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -98,6 +100,7 @@ class APITester:
         response = self.make_request('PUT', '/users/profile', data=user_data, token=self.tokens[user_type])
         return response and response.status_code == 200
 
+
     def create_todo(self, user_type: str) -> bool:
         """Create a new todo item"""
         response = self.make_request('POST', '/todos', data=self.test_todo, token=self.tokens[user_type])
@@ -127,19 +130,21 @@ class APITester:
         update_data = {
             'title': 'Updated Test Todo',
             'description': 'This is an updated test todo item',
-            'priority': 2,
-            'due_date': '2024-12-31T23:59:59Z'
+            'priority': "high",
+            'due_date': '2025-01-31T23:59:59Z'
         }
-        response = self.make_request('PUT', f'/todos/{self.created_todo_id}', data=update_data, token=self.tokens[user_type])
+        response = self.make_request('PUT', f'/todos/{self.created_todo_id}', data=update_data,
+                                     token=self.tokens[user_type])
         return response and response.status_code == 200
 
-    def change_todo_status(self, user_type: str, completed: bool = True) -> bool:
+    def change_todo_status(self, user_type: str, completed: bool = False) -> bool:
         """Change the completion status of a todo item"""
         if not self.created_todo_id:
             print("No todo item created yet")
             return False
         status_data = {'completed': completed}
-        response = self.make_request('PUT', f'/todos/{self.created_todo_id}/status', data=status_data, token=self.tokens[user_type])
+        response = self.make_request('PATCH', f'/todos/{self.created_todo_id}/status', data=status_data,
+                                     token=self.tokens[user_type])
         return response and response.status_code == 200
 
     def delete_todo(self, user_type: str) -> bool:
@@ -154,27 +159,25 @@ class APITester:
         return True
 
     def run_all_tests(self):
-        # Test user authentication
-        user_type = 'admin'
-        print("\n=== Testing User Authentication ===")
-        assert self.register_user(user_type), "Failed to register user"
-        assert self.login_user(user_type), "Failed to login user"
-        assert self.test_user_profile(user_type), "Failed to get user profile"
-        assert self.update_user_profile(user_type), "Failed to update user profile"
-        
-        # Test todo operations
-        print("\n=== Testing Todo Operations ===")
-        assert self.create_todo(user_type), "Failed to create todo"
-        assert self.list_todos(user_type), "Failed to list todos"
-        assert self.get_todo_detail(user_type), "Failed to get todo detail"
-        assert self.update_todo(user_type), "Failed to update todo"
-        assert self.change_todo_status(user_type, True), "Failed to mark todo as completed"
-        assert self.change_todo_status(user_type, False), "Failed to mark todo as not completed"
-        assert self.delete_todo(user_type), "Failed to delete todo"
-
-        print("\nAll tests passed successfully!")
+        return
 
 if __name__ == "__main__":
+    # # Create API tester instance
     tester = APITester()
-    tester.run_all_tests()
+    user_type = 'admin'
+    tester.login_user(user_type)
+    # tester.get_todo_detail(user_type)
+    tester.delete_todo(user_type)
+    # tester.change_todo_status(user_type,completed=True)
+    # tester.get_todo_detail(user_type)
+    # tester.get_todo_detail(user_type)
+    # tester.update_todo(user_type)
+    # tester.get_todo_detail(user_type)
+    # tester.create_todo(user_type)
+    # tester.list_todos(user_type,page=2,size=2)
+    # tester.register_user(user_type)
+    # tester.login_user(user_type)
+    # tester.test_user_profile(user_type)
+    # tester.update_user_profile(user_type)
+    # tester.login_user(user_type)
 

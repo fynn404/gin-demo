@@ -19,6 +19,6 @@ func (r *AuthRoutes) Register(group *gin.RouterGroup) {
 	{
 		auth.POST("/login", r.handler.Auth.Login)
 		auth.POST("/register", r.handler.Auth.Register)
-		//auth.POST("/logout", r.handler.Auth.)
+		auth.POST("/logout", r.handler.Auth.Logout)
 	}
 }
