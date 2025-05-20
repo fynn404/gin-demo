@@ -199,6 +199,9 @@ func (t *Todo) UpdateTodoItem(c *gin.Context, req *UpdateTodoItemReq) (*UpdateTo
 		if req.Description != "" {
 			todo.Description = req.Description
 		}
+		if req.Priority != "" {
+			todo.Priority = req.Priority
+		}
 		todo.UpdatedAt = time.Now()
 
 		// 保存更新
@@ -356,6 +359,7 @@ type UpdateTodoItemReq struct {
 	TodoID      string `json:"todoId"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
+	Priority    string `json:"priority"`
 }
 
 // UpdateTodoItemResp represents the response structure for updating a todo item.
